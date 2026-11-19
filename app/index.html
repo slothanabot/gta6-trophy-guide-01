@@ -3,46 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vice City Trophy Ledger — GTA VI Trophy Guide &amp; Tracker</title>
-<meta name="description" content="An offline, open-source trophy guide and tracker for Grand Theft Auto VI: all 55 PS5 trophies with own-words guides, cited sources, a roadmap to the platinum and the missable trophies flagged.">
+<title>Vice City Trophy Ledger — Grand Theft Auto VI · PS5</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="masthead">
-  <div class="masthead-inner">
+  <div class="masthead-top">
     <div class="brand">
       <p class="kicker">Grand Theft Auto VI &middot; PlayStation 5 &middot; 55 trophies</p>
       <h1>Vice City Trophy Ledger</h1>
-      <p class="tagline">Every trophy, its guide and its source — kept in one ledger you can carry offline.</p>
+      <p class="sub">Every trophy, its official name and description, a plain-words guide, and a checklist that lives in your browser. No account, no network — the whole ledger runs offline.</p>
     </div>
-    <div class="progress-card" aria-label="Progress">
-      <div class="ring" id="ring" role="img" aria-label="Progress ring">
-        <svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
-          <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
-          <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="52"></circle>
-        </svg>
-        <div class="ring-text"><strong id="earnedCount">0</strong><span>of 55</span></div>
-      </div>
-      <div class="progress-meta">
-        <p class="progress-line" id="progressLine">0 of 55 earned &middot; 0%</p>
-        <p class="grade-counts" id="gradeCounts"></p>
-        <p class="progress-note">Progress saves in this browser only. Export it to keep a copy.</p>
+    <div class="progress" aria-label="Progress">
+      <svg class="ring" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Progress ring">
+        <circle class="ring-track" cx="48" cy="48" r="40"></circle>
+        <circle class="ring-fill" id="ring" cx="48" cy="48" r="40"></circle>
+      </svg>
+      <div class="progress-text">
+        <strong id="progressText">0 of 55 earned</strong>
+        <span id="percentText">0% to platinum</span>
       </div>
     </div>
   </div>
+  <div class="grade-chips" id="gradeChips"></div>
+  <div class="toolbar">
+    <label class="search">Search
+      <input id="search" type="search" placeholder="Search a trophy, a mission, a place…" autocomplete="off">
+    </label>
+    <label class="spoiler"><input id="spoiler" type="checkbox"> Spoiler-safe: hide story trophies until earned</label>
+    <button id="export" type="button">Export progress</button>
+    <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
+  </div>
   <nav class="tabs" aria-label="Sections">
-    <button type="button" class="tab active" data-tab="ledger" id="tab-ledger">Ledger</button>
-    <button type="button" class="tab" data-tab="roadmap" id="tab-roadmap">Roadmap to Platinum</button>
-    <button type="button" class="tab" data-tab="missables" id="tab-missables">Missables <span class="tab-badge">14</span></button>
-    <button type="button" class="tab" data-tab="about" id="tab-about">About &amp; Sources</button>
+    <button type="button" data-tab="ledger" class="active">Ledger</button>
+    <button type="button" data-tab="roadmap">Roadmap</button>
+    <button type="button" data-tab="missables">Missables <span class="count-badge">14</span></button>
+    <button type="button" data-tab="about">About</button>
   </nav>
 </header>
 
 <main>
-  <section id="view-ledger" class="view active" aria-label="Trophy ledger">
-    <div class="toolbar">
-      <label class="search">Search
-        <input id="search" type="search" placeholder="Name, mission or keyword — try “shooting” or “bank”" autocomplete="off">
+  <section id="tab-ledger" class="tab-panel active">
+    <div class="filters">
+      <label>Kind
+        <select id="kind">
+          <option value="all">All kinds</option>
+          <option value="story">Story</option>
+          <option value="strand">Stranger strands</option>
+          <option value="activity">Activities</option>
+          <option value="collectible">Collectibles</option>
+          <option value="exploration">Exploration</option>
+          <option value="crime">Crime</option>
+          <option value="economy">Economy</option>
+          <option value="misc">Misc</option>
+          <option value="platinum">Platinum</option>
+        </select>
       </label>
       <label>Grade
         <select id="grade">
@@ -53,90 +68,72 @@
           <option value="bronze">Bronze</option>
         </select>
       </label>
-      <div class="chips" role="group" aria-label="Filter by kind">
-        <button type="button" class="chip active" data-kind="all">All</button>
-        <button type="button" class="chip" data-kind="story">Story</button>
-        <button type="button" class="chip" data-kind="missable">Missable</button>
-        <button type="button" class="chip" data-kind="collectibles">Collectibles</button>
-        <button type="button" class="chip" data-kind="activities">Activities</button>
-        <button type="button" class="chip" data-kind="online">Online</button>
-      </div>
-      <label class="spoiler-toggle"><input id="spoiler" type="checkbox"> Spoiler-safe: hide story names until earned</label>
-      <div class="file-actions">
-        <button id="export" type="button">Export progress</button>
-        <label class="import">Import progress <input id="import" type="file" accept="application/json"></label>
-        <button id="reset" type="button" class="quiet">Reset</button>
-      </div>
+      <label>Status
+        <select id="status">
+          <option value="all">All</option>
+          <option value="earned">Earned</option>
+          <option value="not">Not earned</option>
+        </select>
+      </label>
+      <label class="check"><input id="missableOnly" type="checkbox"> Missable only</label>
+      <span class="showing" id="showing">Showing 55 of 55</span>
     </div>
-    <p class="result-line" id="resultLine"></p>
-    <p class="empty" id="emptyOnline" hidden>There are no online trophies — all 55 are earned solo, offline. That is the whole point of this list.</p>
-    <table class="ledger">
-      <thead><tr>
-        <th class="col-check"><span class="visually-hidden">Earned</span></th>
-        <th>Trophy</th><th>Grade</th><th>Kind</th><th>How to get it</th><th>Source</th>
-      </tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <p class="empty" id="emptyNone" hidden>No trophies match these filters. Clear the search or pick another kind.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th class="col-check">Earned</th><th class="col-grade">Grade</th><th>Trophy</th><th class="col-kind">Kind</th><th class="col-miss">Missable</th><th class="col-guide">Guide</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <section id="guide" class="guide-panel" hidden aria-live="polite"></section>
   </section>
 
-  <section id="view-roadmap" class="view" aria-label="Roadmap to platinum">
-    <h2>Roadmap to the platinum</h2>
-    <p class="lede">One playthrough, about <strong>200 hours</strong>, difficulty <strong>4/10</strong> (PowerPyx). There is no mission replay and no New Game+, but free-roam continues after the story — so play the story first, then clean up. Keep cheats off the whole run: they disable trophies and saving.</p>
-    <ol class="roadmap" id="roadmapList"></ol>
-    <aside class="callout">
-      <h3>The 100% checklist, in numbers</h3>
-      <p>It appears under <strong>Progress &gt; Stats &gt; 100% Completion</strong> after the story, but progress made during the story already counts. It is roughly 60% true completion: <strong>200 of 277</strong> vehicles scanned, <strong>100 of 255</strong> animals studied, <strong>50 of 66</strong> weapons, <strong>70 of 80</strong> challenges. Only robberies, underwater discoveries, shooting ranges, drone races and Bret&rsquo;s quests need everything. (PowerPyx)</p>
-    </aside>
+  <section id="tab-roadmap" class="tab-panel">
+    <p class="lede">One playthrough, about 200 hours to platinum (PowerPyx: difficulty 4/10). Work the story first and grab the one-time moments on the way, then strands and activities, then collectibles, then the crime and economy cleanup — the 100% checklist only unlocks after the story.</p>
+    <div id="roadmap" class="roadmap"></div>
   </section>
 
-  <section id="view-missables" class="view" aria-label="Missable trophies">
-    <h2>Missable trophies — 14 to watch</h2>
-    <p class="lede">GTA VI has <strong>no mission replay and no New Game+</strong>, so a one-time story beat or choice you pass without doing cannot be redone on this save. PowerPyx (November 2026) confirms only one trophy as potentially missable — the Chapter 1 meditation. The other thirteen below are flagged because they hang on a single story moment, a choice, or a side strand that can lock out. Do them when they appear.</p>
-    <ol class="missable-list" id="missableList"></ol>
+  <section id="tab-missables" class="tab-panel">
+    <p class="lede">Fourteen trophies need a one-time moment. GTA VI has no mission replay and no New Game+, so a story mission or strand finale can only be played once. Only <strong>Positive Mental Attitude</strong> is confirmed missable by the guide sites (the first meditation, at Jason&rsquo;s house, in Chapter 1); the rest are flagged as one-time moments for the same reason — finish them when they appear.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th class="col-check">Earned</th><th class="col-grade">Grade</th><th>Trophy</th><th>Why it is missable</th><th class="col-guide">Guide</th></tr>
+        </thead>
+        <tbody id="missableRows"></tbody>
+      </table>
+    </div>
   </section>
 
-  <section id="view-about" class="view" aria-label="About and sources">
+  <section id="tab-about" class="tab-panel">
     <h2>About this ledger</h2>
-    <p class="lede">A free, open-source, offline trophy guide and tracker for Grand Theft Auto VI. It runs entirely from its own files — no network, no account, no ads — and your progress never leaves your browser unless you export it.</p>
+    <p>This is a fan-made guide and tracker for the 55 official PlayStation 5 trophies of Grand Theft Auto VI. Trophy names, descriptions and grades are the official list. The guides are written in my own words from those descriptions and from the cited guide sites — PowerPyx, TrueTrophies, Exophase and PSNProfiles — with a link to the source on every trophy&rsquo;s guide panel.</p>
     <h3>How to use it</h3>
     <ul>
-      <li><strong>Tick trophies off</strong> as you earn them; progress saves in localStorage automatically.</li>
-      <li><strong>Export</strong> downloads your progress as JSON; <strong>Import</strong> restores it on another machine.</li>
-      <li><strong>Filters</strong> narrow the ledger by story, missable, collectibles, activities or online. Search matches names, descriptions and guide text.</li>
+      <li>Tick a trophy&rsquo;s checkbox when you earn it. Progress is saved in your browser (localStorage) and survives a reload.</li>
+      <li>Use <strong>Export progress</strong> to save your ticks to a file, and <strong>Import progress</strong> to bring them back on another device.</li>
+      <li>Click <strong>Guide</strong> on any row to open its full guide: steps, missable note, and the cited source.</li>
       <li><strong>Spoiler-safe</strong> hides the names and descriptions of story trophies until you earn them.</li>
-      <li>Click any trophy row to open its full guide — steps, missable note and source.</li>
-      <li>Deep links work: <code>#trophy-17</code> opens a guide, <code>?tab=roadmap</code> opens the roadmap, <code>?demo=1</code> previews the ledger with sample progress.</li>
+      <li>There are no online trophies in this list — the online filter shows nothing, which is correct.</li>
     </ul>
-    <h3>Sources</h3>
-    <p>Official trophy names, descriptions and grades are as PlayStation publishes them. Every guide is written in this entry&rsquo;s own words, drawing on the published guides below — cited, never copied:</p>
-    <ul class="sources">
-      <li><a href="https://www.powerpyx.com/gta-6-grand-theft-auto-vi-trophy-guide-roadmap/">PowerPyx — GTA 6 Trophy Guide &amp; Roadmap</a> (roadmap, difficulty, time, missables, 100% checklist)</li>
-      <li><a href="https://www.exophase.com/game/grand-theft-auto-vi-psn/trophies/">Exophase — Grand Theft Auto VI trophies</a> (trophy list and rarity)</li>
-      <li><a href="https://psnprofiles.com/trophies/43531-grand-theft-auto-vi">PSNProfiles — Grand Theft Auto VI trophies</a> (trophy list and rarity)</li>
-      <li><a href="https://www.truetrophies.com/game/Grand-Theft-Auto-VI/trophies">TrueTrophies — Grand Theft Auto VI trophies</a> (trophy checklists and tracking)</li>
+    <h3>Roadmap facts (PowerPyx)</h3>
+    <ul>
+      <li>Difficulty 4/10, about 200 hours to platinum; the hardest trophy is A Long Road (100% completion).</li>
+      <li>55 offline trophies (1 platinum, 2 gold, 6 silver, 46 bronze), 0 online, 1 playthrough minimum.</li>
+      <li>Story is 5 chapters, about 60–80 hours. Free-roam continues after the story, but there is no mission replay.</li>
+      <li>Cheats disable trophies — do not use them on a trophy run.</li>
+      <li>The 100% Completion Checklist (Progress &gt; Stats &gt; 100% Completion) is about 60% of true game completion: 70 of 80 Challenges, 15 of 18 card sets, and the full robberies, shooting ranges, drone races, underwater discoveries and Bret&rsquo;s quests.</li>
     </ul>
-    <p class="fineprint">Grand Theft Auto VI is a game by Rockstar Games. This ledger is an unofficial fan guide; it shows no Rockstar logo, artwork or game screenshots. Figures are from the guides above, November 2026 — the game is a day old and details may change as more players finish it.</p>
+    <h3>Honesty note</h3>
+    <p>A few triggers were not yet confirmed by the guide sites when this ledger was written — Challenging Tank, Personal Best, Bad Luck I Guess and The Truth Is Out There. Their guides say so plainly and follow the official description rather than guessing. The missable list is honest about what is confirmed and what is flagged as a one-time moment.</p>
+    <p class="fineprint">Fan-made, unofficial. Grand Theft Auto and GTA are trademarks of Take-Two Interactive. No Rockstar assets are used; this page uses system fonts only and makes no network requests.</p>
   </section>
 </main>
 
-<div class="panel-backdrop" id="panelBackdrop" hidden></div>
-<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" hidden>
-  <button type="button" class="panel-close" id="panelClose" aria-label="Close guide">&times;</button>
-  <p class="panel-grade" id="panelGrade"></p>
-  <h2 id="panelTitle"></h2>
-  <p class="panel-desc" id="panelDesc"></p>
-  <p class="panel-missable" id="panelMissable" hidden></p>
-  <h3>How to get it</h3>
-  <p id="panelGuide"></p>
-  <ol class="panel-steps" id="panelSteps"></ol>
-  <p class="panel-source">Source: <a id="panelSource" href="#" rel="noopener"></a></p>
-  <label class="panel-earned"><input id="panelEarned" type="checkbox"> Earned</label>
-</aside>
-
 <footer>
-  <p>Vice City Trophy Ledger — an offline guide for Grand Theft Auto VI. 55 trophies: 1 platinum, 2 gold, 6 silver, 46 bronze. All offline, single-player.</p>
+  <p>Vice City Trophy Ledger &middot; Grand Theft Auto VI &middot; PlayStation 5 &middot; 55 trophies &middot; built offline, system fonts only.</p>
 </footer>
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
